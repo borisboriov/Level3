@@ -1,11 +1,18 @@
 package ServerSide;
 
+import ServerSide.Interface.AuthService;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 
 
 public class MyServer {
+
+    private  final int PORT = 8189;
+    private List<ClientHandler> clients;
+    private AuthService authService;
 
     private static Socket socket;
     private static ServerSocket serverSocket;
@@ -28,19 +35,19 @@ public class MyServer {
                while (true){
 
                    try {
-                       String messageFromServer = "";
+                       String  messageFromServer = "";
                        if (bufferedReader.ready()){
                             messageFromServer = bufferedReader.readLine();
                        }
                        if (!messageFromServer.isEmpty()){
                            dos.writeUTF(messageFromServer);
-                           System.out.println(messageFromServer);
                        }
                    } catch (IOException e) {
                        e.printStackTrace();
                    }
                }
             });
+            t1.setDaemon(true);
             t1.start();
 
             while (true) {
@@ -68,6 +75,20 @@ public class MyServer {
         if (socket != null){
             try {
                 socket.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        if (dis != null){
+            try {
+                dis.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        if (dos != null){
+            try {
+                dos.close();
             } catch (IOException e){
                 e.printStackTrace();
             }

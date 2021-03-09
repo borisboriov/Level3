@@ -20,8 +20,8 @@ public class EchoClient extends JFrame {
     private JTextArea chatArea;
 
     private Socket socket;
-    private DataInputStream in;
-    private DataOutputStream out;
+    private DataInputStream dis;
+    private DataOutputStream dos;
 
     public EchoClient() {
         try {
@@ -34,14 +34,14 @@ public class EchoClient extends JFrame {
 
     public void openConnection() throws IOException {
         socket = new Socket(SERVER_ADDR, SERVER_PORT);
-        in = new DataInputStream(socket.getInputStream());
-        out = new DataOutputStream(socket.getOutputStream());
+        dis = new DataInputStream(socket.getInputStream());
+        dos = new DataOutputStream(socket.getOutputStream());
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     while (true) {
-                        String strFromServer = in.readUTF();
+                        String strFromServer = dis.readUTF();
                         if (strFromServer.equalsIgnoreCase("/end")) {
                             break;
                         }
@@ -57,11 +57,11 @@ public class EchoClient extends JFrame {
 
     public void closeConnection() {
         try {
-            in.close();
+            dis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try { out.close();
+        try { dos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,12 +75,10 @@ public class EchoClient extends JFrame {
     public void sendMessage() {
         if (!msgInputField.getText().trim().isEmpty()) {
             try {
-                out.writeUTF(msgInputField.getText());
+                String messageToServer = msgInputField.getText();
+                dos.writeUTF(messageToServer);
                 msgInputField.setText("");
-                msgInputField.grabFocus();
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Ошибка отправки сообщения");
+            } catch (IOException ignored) {
             }
         }
     }
@@ -123,7 +121,7 @@ public class EchoClient extends JFrame {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
                 try {
-                    out.writeUTF("/end");
+                    dos.writeUTF("/end");
                     closeConnection();
                 } catch (IOException exc) {
                     exc.printStackTrace();
@@ -136,14 +134,9 @@ public class EchoClient extends JFrame {
 
     public static void main(String[] args) {
         
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        SwingUtilities.invokeLater(() ->{
                 new EchoClient();
-            }
         });
     }
-
-
 
 }
