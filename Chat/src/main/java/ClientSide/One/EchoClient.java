@@ -22,6 +22,7 @@ public class EchoClient extends JFrame {
     private Socket socket;
     private DataInputStream dis;
     private DataOutputStream dos;
+    boolean isAuthorized = false;
 
     public EchoClient() {
         try {
@@ -36,22 +37,26 @@ public class EchoClient extends JFrame {
         socket = new Socket(SERVER_ADDR, SERVER_PORT);
         dis = new DataInputStream(socket.getInputStream());
         dos = new DataOutputStream(socket.getOutputStream());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (true) {
-                        String strFromServer = dis.readUTF();
-                        if (strFromServer.equalsIgnoreCase("/end")) {
-                            break;
-                        }
-                        chatArea.append(strFromServer);
-                        chatArea.append("\n");
+
+        new Thread(() -> {
+            try {
+                while (true) {
+                    String strFromServer = dis.readUTF();
+                    if (strFromServer.startsWith("/authok")) {
+                        isAuthorized = true;
+                        chatArea.append(strFromServer + "\n");
+                        break;
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    chatArea.append(strFromServer + "\n");
                 }
+
+                while (isAuthorized) {
+                    String strFromServer = dis.readUTF();
+                    chatArea.append(strFromServer + "\n");
+                }
+            } catch (Exception ignored) {
             }
+
         }).start();
     }
 
@@ -61,7 +66,8 @@ public class EchoClient extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try { dos.close();
+        try {
+            dos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,11 +78,25 @@ public class EchoClient extends JFrame {
         }
     }
 
+//    public void onAuthClick() {
+//        try {
+//            dos.writeUTF("/auth" + " " + loginfield.getText() + " "passwordField.getText());
+//            loginfield.setText("");
+//            passwordField.setText("");
+//        } catch (IOException ignored) {
+//        }
+//    }
+
     public void sendMessage() {
-        if (!msgInputField.getText().trim().isEmpty()) {
+        if (msgInputField.getText() != null && !msgInputField.getText().trim().isEmpty()) {
+
             try {
-                String messageToServer = msgInputField.getText();
-                dos.writeUTF(messageToServer);
+                dos.writeUTF(msgInputField.getText());
+                if (msgInputField.getText().equals("/end")) {
+                    isAuthorized = false;
+                    closeConnection();
+                }
+                chatArea.append(msgInputField.getText() + "\n");
                 msgInputField.setText("");
             } catch (IOException ignored) {
             }
@@ -133,9 +153,9 @@ public class EchoClient extends JFrame {
     }
 
     public static void main(String[] args) {
-        
-        SwingUtilities.invokeLater(() ->{
-                new EchoClient();
+
+        SwingUtilities.invokeLater(() -> {
+            new EchoClient();
         });
     }
 

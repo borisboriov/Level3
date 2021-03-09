@@ -5,99 +5,61 @@ import ServerSide.Interface.AuthService;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MyServer {
 
-    private  final int PORT = 8189;
+    private final int PORT = 8189;
     private List<ClientHandler> clients;
     private AuthService authService;
 
-    private static Socket socket;
-    private static ServerSocket serverSocket;
-    private static DataInputStream dis;
-    private static DataOutputStream dos;
-    private static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    public AuthService getAuthService(){
+        return this.authService;
+    }
 
-
-    public static void main(String[] args) {
-        try {
-            serverSocket = new ServerSocket(8189);
-            System.out.println("Сервер запущен, ожидаем подключения...");
-            socket = serverSocket.accept();
-            System.out.println("Клиент подключился");
-            dis = new DataInputStream(socket.getInputStream());
-            dos = new DataOutputStream(socket.getOutputStream());
-            boolean isEndSession = false;
-
-            Thread t1 = new Thread(() ->{
-               while (true){
-
-                   try {
-                       String  messageFromServer = "";
-                       if (bufferedReader.ready()){
-                            messageFromServer = bufferedReader.readLine();
-                       }
-                       if (!messageFromServer.isEmpty()){
-                           dos.writeUTF(messageFromServer);
-                       }
-                   } catch (IOException e) {
-                       e.printStackTrace();
-                   }
-               }
-            });
-            t1.setDaemon(true);
-            t1.start();
-
-            while (true) {
-                String messageFromClient = dis.readUTF();
-                if (messageFromClient.equals("/end")) {
-                    break;
-                }
-                System.out.println(messageFromClient);
+    public MyServer(){
+        try (ServerSocket server = new ServerSocket(PORT)){
+            authService = new BaseAuthService();
+            authService.start();
+            clients = new ArrayList<>();
+            while (true){
+                System.out.printf("Server is waiting for client" + "\n");
+                Socket socket = server.accept();
+                System.out.printf("Client has been connected" + "\n");
+                new ClientHandler(this, socket);
             }
-        } catch (IOException ignored) {
-            System.out.println("Соединение разрванно.");
-        }finally {
-            close();
+        } catch (IOException e){
+            System.out.printf("Server fall");
+        } finally {
+            if (authService != null){
+                authService.stop();
+            }
         }
     }
 
-    private static void close() {
-        if (serverSocket != null){
-            try {
-                serverSocket.close();
-            } catch (IOException e){
-                e.printStackTrace();
+
+    public synchronized void broadcastMessage(String message){
+        for (ClientHandler c : clients) {
+            c.sendMessage(message);
+        }
+    }
+
+    public synchronized void subscribe(ClientHandler client){
+        clients.add(client);
+    }
+
+    public synchronized void unSubscribe(ClientHandler client){
+        clients.remove(client);
+    }
+
+    public boolean isNickBusy(String nick) {
+        for (ClientHandler c : clients) {
+            if (c.getName().equals(nick)){
+                return true;
             }
         }
-        if (socket != null){
-            try {
-                socket.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        if (dis != null){
-            try {
-                dis.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-        if (dos != null){
-            try {
-                dos.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
+        return false;
     }
 }
-
-//Т.е. если на клиентской стороне написать «Привет», нажать Enter,
-// то сообщение должно передаться на сервер и там отпечататься в консоли.
-// Если сделать то же самое на серверной стороне, сообщение, соответственно, передаётся клиенту и печатается у него в консоли.
-// Есть одна особенность, которую нужно учитывать: клиент или сервер может написать несколько сообщений подряд.
-// Такую ситуацию необходимо корректно обработать.
