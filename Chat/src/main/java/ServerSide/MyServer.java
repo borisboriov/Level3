@@ -46,6 +46,28 @@ public class MyServer {
         }
     }
 
+    public synchronized void sendMessageToCertainClient(ClientHandler from, String toName, String message) {
+        for (ClientHandler c: clients) {
+            if (c.getName().equals(toName)){
+                c.sendMessage(message);
+                from.sendMessage(message);
+            }
+        }
+    }
+
+    public synchronized void getOnlineUsersList(ClientHandler clientHandler) {
+        StringBuilder sb = new StringBuilder("");
+        for (ClientHandler c: clients) {
+            if (!c.equals(clientHandler))
+            sb.append(c.getName() + ", ");
+        }
+        int size = sb.length();
+        sb.deleteCharAt(size -1);
+        sb.deleteCharAt(size -2);
+        clientHandler.sendMessage(sb.toString());
+
+    }
+
     public synchronized void subscribe(ClientHandler client){
         clients.add(client);
     }
@@ -62,4 +84,6 @@ public class MyServer {
         }
         return false;
     }
+
 }
+//3. Добавить отключение авторизованного пользователя, если он в течении 3-х минут не отправляет сообщение.
