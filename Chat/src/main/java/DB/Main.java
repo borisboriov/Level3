@@ -23,30 +23,24 @@ public class Main {
 
         } catch (SQLException | ClassNotFoundException throwables) {
             throwables.printStackTrace();
-        }
-
-
-
-        try {
-            ResultSet set = statement.executeQuery("SELECT * FROM user");
-            while (set.next()) {
-                User user = new User().userBuilder(set);
-                System.out.println(user);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
+//        try {
+//            ResultSet set = statement.executeQuery("SELECT * FROM user");
+//            while (set.next()) {
+//                User user = new User().userBuilder(set);
+//                System.out.println(user);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
-//} finally {
-//        try {
-//        if (statement != null) {
-//        statement.close();
-//
-//        }
-//        } catch (SQLException throwables) {
-//        throwables.printStackTrace();
-//        }
-//        }
 }

@@ -12,7 +12,6 @@ public final class Singleton {
     static final String PASSWORD = "koptevo123";
     static private   Connection connection;
 
-
     private Singleton(){
 
     }
