@@ -25,13 +25,13 @@ public class MyServer {
             authService.start();
             clients = new ArrayList<>();
             while (true){
-                System.out.printf("Server is waiting for client" + "\n");
+                System.out.println("Server is waiting for client" + "\n");
                 Socket socket = server.accept();
-                System.out.printf("Client has been connected" + "\n");
+                System.out.println("Client has been connected" + "\n");
                 new ClientHandler(this, socket);
             }
         } catch (IOException e){
-            System.out.printf("Server fall");
+            System.out.println("Server fall");
         } finally {
             if (authService != null){
                 authService.stop();

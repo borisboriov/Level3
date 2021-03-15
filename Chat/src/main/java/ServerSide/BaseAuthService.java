@@ -2,6 +2,8 @@ package ServerSide;
 
 import ServerSide.Interface.AuthService;
 
+import javax.swing.border.EmptyBorder;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,7 @@ public class BaseAuthService implements AuthService {
         return null;
     }
 
-    private class Entry{
+    private static class Entry{
         private String login;
         private String password;
         private String nick;
