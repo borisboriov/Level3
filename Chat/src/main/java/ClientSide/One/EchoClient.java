@@ -40,7 +40,6 @@ public class EchoClient extends JFrame {
         dos = new DataOutputStream(socket.getOutputStream());
 
         new Thread(() -> {
-            File history = new File("Chat/src/main/java/ClientSide/Three/history_login3.txt");
 
             try {
                 while (true) {
@@ -58,16 +57,20 @@ public class EchoClient extends JFrame {
                     String strFromServer = dis.readUTF();
                     chatArea.append(strFromServer + "\n");
 
-                    PrintWriter fileWriter = new PrintWriter(new FileWriter(history, false));//запись истории в файл??
-                    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(history));
-                    String str;
-                    str = chatArea.getText();
-                    bufferedWriter.write(str);
-                    bufferedWriter.close();
+                    saveMsgHistory();
                 }
             } catch (Exception ignored) {
             }
         }).start();
+    }
+
+    private void saveMsgHistory() throws IOException {
+        File history = new File("Chat/src/main/java/ClientSide/One/history_login1.txt");
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(history));
+        String str;
+        str = chatArea.getText();
+        bufferedWriter.write(str);
+        bufferedWriter.close();
     }
 
     private void loadMsgHistory() throws IOException {

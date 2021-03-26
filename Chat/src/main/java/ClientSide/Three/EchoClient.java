@@ -68,15 +68,13 @@ public class EchoClient extends JFrame {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(history));
         String str;
         str = chatArea.getText();
-        if (str.startsWith("one")) {
-            bufferedWriter.write(str);
-        }
+        bufferedWriter.write(str);
         bufferedWriter.close();
     }
 
     private void loadMsgHistory() throws IOException {
         int count = 100;
-        File loadHistory = new File("Chat/src/main/java/ClientSide/One/history_login1.txt");
+        File loadHistory = new File("Chat/src/main/java/ClientSide/Three/history_login3.txt");
         List<String> msgList = new ArrayList<>();
         FileInputStream in = new FileInputStream(loadHistory);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));

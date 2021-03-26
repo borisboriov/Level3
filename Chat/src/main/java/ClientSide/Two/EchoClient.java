@@ -6,10 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EchoClient extends JFrame {
 
@@ -39,6 +39,7 @@ public class EchoClient extends JFrame {
         dos = new DataOutputStream(socket.getOutputStream());
 
         new Thread(() -> {
+
             try {
                 while (true) {
                     String strFromServer = dis.readUTF();
@@ -47,17 +48,45 @@ public class EchoClient extends JFrame {
                         chatArea.append(strFromServer + "\n");
                         break;
                     }
-                    chatArea.append(strFromServer + "\n");
                 }
+
+                loadMsgHistory();
 
                 while (isAuthorized) {
                     String strFromServer = dis.readUTF();
                     chatArea.append(strFromServer + "\n");
+
+                    saveMsgHistory();
                 }
             } catch (Exception ignored) {
             }
-
         }).start();
+    }
+
+    private void saveMsgHistory() throws IOException {
+        File history = new File("Chat/src/main/java/ClientSide/Two/history_login2.txt");
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(history));
+        String str;
+        str = chatArea.getText();
+        bufferedWriter.write(str);
+        bufferedWriter.close();
+    }
+
+    private void loadMsgHistory() throws IOException {
+        int count = 100;
+        File loadHistory = new File("Chat/src/main/java/ClientSide/Two/history_login2.txt");
+        List<String> msgList = new ArrayList<>();
+        FileInputStream in = new FileInputStream(loadHistory);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+        String temp;
+        while ((temp = bufferedReader.readLine()) != null) {
+            msgList.add(temp);
+        }
+        if (msgList.size() > count) {
+            for (int i = msgList.size() - count; i <= (msgList.size() - 1); i++) {
+                chatArea.append(msgList.get(i) + "\n");
+            }
+        }
     }
 
     public void closeConnection() {
