@@ -1,0 +1,108 @@
+/auth log3 1
+/authok xxx
+one1: 173
+one1: 174
+one1: 175
+one1: 176
+one1: 177
+one1: 178
+one1: 179
+one1: 180
+one1: 181
+one1: 182
+one1: 183
+one1: 184
+one1: 185
+one1: 186
+one1: 187
+one1: 188
+one1: 189
+one1: 190
+one1: 191
+one1: 192
+one1: 193
+one1: 194
+one1: 195
+one1: 196
+one1: 197
+one1: 198
+one1: 199
+one1: 200
+Hello one1
+dewfwefew
+one1: dewfwefew
+Hello one2
+one2: dqwdqdw
+Hello one3
+one3: dewfwefewf
+one3Left chat
+Hello one3
+one3Left chat
+Hello one1
+Hello one1
+Hello one1
+Hello one2
+one2Left chat
+Hello one2
+one2: ewfwefwefwef
+Hello one1
+Hello one2
+one2: efwfewf
+fewfwe
+one1: fewfwe
+one2Left chat
+Hello one1
+Hello one2
+/list
+one2
+Hello one1
+Hello one1
+Hello one2
+wqeqwe
+one1: wqeqwe
+Hello one1
+Hello one2
+Hello one1
+Hello one1
+Hello one1
+Hello one1
+Hello one1
+Hello one1
+Hello one1
+/change ewrew
+ewfwefew
+one1: ewfwefew
+fwefew
+one1: fwefew
+Hello one1
+/change xxxx
+dew
+one1: dew
+dewdew
+one1: dewdew
+Hello one1
+/change cxc
+fdsfds
+one1: fdsfds
+fsdf
+one1: fsdf
+Hello one1
+fwef
+one1: fwef
+/change fwef
+fwefe
+one1: fwefe
+fewf
+one1: fewf
+Hello xxx
+xxxLeft chat
+Hello xxx
+/change zzz
+dfsdfd
+xxx: dfsdfd
+Hello xxx
+dwqd\
+xxx: dwqd\
+/change xxx
+fwefew
+xxx: fwefew
