@@ -1,7 +1,5 @@
-/auth log3 1
-/authok one3
-one1: 104
-one1: 105
+/auth log2 1
+/authok one2
 one1: 106
 one1: 107
 one1: 108
@@ -101,3 +99,5 @@ Hello one3
 dewfwefewf
 one3: dewfwefewf
 Hello one3
+Hello one3
+Hello one2

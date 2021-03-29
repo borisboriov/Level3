@@ -1,11 +1,14 @@
 package ServerSide;
 
-import ClientSide.One.EchoClient;
+
+import DB.Main;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler {
 
@@ -28,28 +31,56 @@ public class ClientHandler {
             this.dos = new DataOutputStream(socket.getOutputStream());
             this.name = "";
 
-            new Thread(() -> {
-                try {
-                    authentification();
-                    time = System.currentTimeMillis();
-                    readMessage();
-                } catch (IOException ignored) {
-                } finally {
-                    closeConnection();
-                }
-            }).start();
 
-            new Thread(() -> {
-                while (true) {
+            ExecutorService executorService = Executors.newFixedThreadPool(10);
+            executorService.execute(new Runnable() {
+                public void run() {
                     try {
-                        Thread.sleep(120000);
-                    } catch (InterruptedException ignored) {
-                    }
-                    if (!isAuthorized) {
+                        authentification();
+                        time = System.currentTimeMillis();
+                        readMessage();
+                    } catch (IOException ignored) {
+                    } finally {
                         closeConnection();
                     }
                 }
-            }).start();
+            });
+            executorService.execute(new Runnable() {
+                public void run() {
+                    while (true) {
+                        try {
+                            Thread.sleep(120000);
+                        } catch (InterruptedException ignored) {
+                        }
+                        if (!isAuthorized) {
+                            closeConnection();
+                        }
+                    }
+                }
+            });
+
+//            new Thread(() -> {
+//                try {
+//                    authentification();
+//                    time = System.currentTimeMillis();
+//                    readMessage();
+//                } catch (IOException ignored) {
+//                } finally {
+//                    closeConnection();
+//                }
+//            }).start();
+
+//            new Thread(() -> {
+//                while (true) {
+//                    try {
+//                        Thread.sleep(120000);
+//                    } catch (InterruptedException ignored) {
+//                    }
+//                    if (!isAuthorized) {
+//                        closeConnection();
+//                    }
+//                }
+//            }).start();
 
         } catch (IOException e) {
             closeConnection();
@@ -108,6 +139,9 @@ public class ClientHandler {
                 }
                 if (messageFromClient.trim().startsWith("/list")) {
                     myServer.getOnlineUsersList(this);
+                }
+                if (messageFromClient.startsWith("/change")) {
+                    BaseAuthService.nickChange();// ???????? не меняет запись в бд из метода
                 }
                 if (messageFromClient.trim().startsWith("/end")) {
                     return;

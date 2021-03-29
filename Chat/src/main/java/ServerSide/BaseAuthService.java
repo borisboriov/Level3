@@ -1,24 +1,30 @@
 package ServerSide;
 
-import DB.Main;
 import DB.Singleton;
 import ServerSide.Interface.AuthService;
-import javax.swing.border.EmptyBorder;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Statement;
 
 public class BaseAuthService implements AuthService {
 
-//    private List<Entry> entryList;
-//
-//    public BaseAuthService() {
-//        entryList = new ArrayList<>();
-//        entryList.add(new Entry("log1", "pass1", "One"));
-//        entryList.add(new Entry("log2", "pass2", "Two"));
-//        entryList.add(new Entry("log3", "pass3", "Three"));
-//    }
+    public static void nickChange() {
+//        String[] arr = messageFromClient.split(" ", 1);
+//        String nick = clientHandler.getName();
+
+        try {
+            Statement statement;
+            statement = Singleton.getConnection().createStatement();
+            statement.executeUpdate("UPDATE user SET nick = 'xxx' WHERE nick = 'zzzz'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @Override
     public void start() {
@@ -49,16 +55,4 @@ public class BaseAuthService implements AuthService {
 
         return null;
     }
-
-//    private class Entry {
-//        private String login;
-//        private String password;
-//        private String nick;
-//
-//        public Entry(String login, String password, String nick) {
-//            this.login = login;
-//            this.password = password;
-//            this.nick = nick;
-//        }
-//    }
 }

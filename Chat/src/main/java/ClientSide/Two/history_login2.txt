@@ -1,29 +1,5 @@
-/auth log2 1
-/authok one2
-one1: 101
-one1: 102
-one1: 103
-one1: 104
-one1: 105
-one1: 106
-one1: 107
-one1: 108
-one1: 109
-one1: 110
-one1: 111
-one1: 112
-one1: 113
-one1: 114
-one1: 115
-one1: 116
-one1: 117
-one1: 118
-one1: 119
-one1: 120
-one1: 121
-one1: 122
-one1: 123
-one1: 124
+/auth log3 1
+/authok xxx
 one1: 125
 one1: 126
 one1: 127
@@ -108,3 +84,20 @@ one3: dewfwefewf
 one3Left chat
 Hello one3
 one3Left chat
+Hello one2
+ewfwefwefwef
+one2: ewfwefwefwef
+one1Left chat
+Hello one2
+efwfewf
+one2: efwfewf
+one1: fewfwe
+Hello one2
+one1Left chat
+one1Left chat
+Hello one2
+one1: wqeqwe
+one1Left chat
+Hello one2
+one1Left chat
+Hello xxx
